@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-function App(props) {
+function App({ store }) {
     // No longer a class
     // constructor() {
     //     super();
@@ -35,10 +35,8 @@ function App(props) {
     //     }
     // }
 
-    //const [robots, setRobots];
-    //const [searchField, setSearchfield];
-    // const [robots, setRobots] = useState([]);
-    // const [searchField, setSearchfield] = useState('');
+    const [robots, setRobots] = useState([]);
+    const [searchField, setSearchfield] = useState('');
     //const [count, setCount] = useState(0);
 
     // componentDidMount() {
@@ -47,23 +45,21 @@ function App(props) {
     //         .then(users => { this.setState({ robots: users }); })
     // }
 
-    //useEffect(() => {
+    useEffect(() => {
+        fetch('https://jsonplaceholder.typicode.com/users')
+            .then(response => { return response.json() })
+            .then(users => { setRobots(users) })
+        //console.log(count);
+    })//[count])
 
-    // fetch('https://jsonplaceholder.typicode.com/users')
-    //     .then(response => { return response.json() })
-    //     .then(users => { setRobots(users) })
-    //console.log(count);
-    //})//[count])
+    const onSearchChange = (event) => {
+        setSearchfield(event.target.value);
+    }
 
-    // const onSearchChange = (event) => {
-    //     setSearchfield(event.target.value);
-    // }
-    props.onRequestRobots();
-    const { searchfield, onSearchChange, robots, isPending } = props
     // render() {
     // const { robots, searchfield } = this.state;
     const filteredRobots = robots.filter(robot => {
-        return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+        return robot.name.toLowerCase().includes(searchField.toLowerCase());
     });
     //console.log(filteredRobots);
     /* Longer Method
@@ -82,8 +78,7 @@ function App(props) {
         );
     }
     */
-    //return !robots.length ?
-    return isPending ?
+    return !robots.length ?
         <h1 className="tc f1">Loading...</h1> :
         (
             <div className="tc" >
