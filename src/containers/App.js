@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import SearchBox from '../components/SearchBox';
 import CardList from '../components/CardList';
 import Scroll from '../components/Scroll';
 import ErrorBoundary from '../components/ErrorBoundary';
 import './App.css';
 
-function App() {
+import { setSearchField } from '../actions';
+
+const mapStateToProps = state => {
+    return {
+        searchfield: state.searchField
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSearchChange: (event) => dispatch(setSearchField(event.target.value))
+    }
+}
+
+function App({ store }) {
     // No longer a class
     // constructor() {
     //     super();
@@ -16,8 +31,8 @@ function App() {
     // }
 
     const [robots, setRobots] = useState([]);
-    const [searchfield, setSearchfield] = useState('');
-    const [count, setCount] = useState(0);
+    const [searchField, setSearchfield] = useState('');
+    //const [count, setCount] = useState(0);
 
     // componentDidMount() {
     //     fetch('https://jsonplaceholder.typicode.com/users')
@@ -29,8 +44,8 @@ function App() {
         fetch('https://jsonplaceholder.typicode.com/users')
             .then(response => { return response.json() })
             .then(users => { setRobots(users) })
-        console.log(count);
-    }, [count])
+        //console.log(count);
+    })//[count])
 
     const onSearchChange = (event) => {
         setSearchfield(event.target.value);
@@ -39,7 +54,7 @@ function App() {
     // render() {
     // const { robots, searchfield } = this.state;
     const filteredRobots = robots.filter(robot => {
-        return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+        return robot.name.toLowerCase().includes(searchField.toLowerCase());
     });
     //console.log(filteredRobots);
     /* Longer Method
@@ -78,4 +93,4 @@ function App() {
     // }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
